@@ -21,14 +21,22 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static java.net.HttpURLConnection.*;
-
+/**
+ * Service implementation for managing reviews.
+ *
+ * @author codecharlan
+ */
 @Service
 @RequiredArgsConstructor
 public class ReviewServiceImpl implements ReviewService {
     private final ReviewRepository reviewRepository;
     private final UserRepository userRepository;
     private final BookRepository bookRepository;
-
+    /**
+     * Retrieves all reviews.
+     *
+     * @return ApiResponse containing a list of ReviewResponseDto objects and HTTP_OK status code.
+     */
     @Override
     public ApiResponse<List<ReviewResponseDto>> getAllReviews() {
         List<Review> reviews = reviewRepository.findAll();
@@ -37,11 +45,23 @@ public class ReviewServiceImpl implements ReviewService {
                 .collect(Collectors.toList());
         return new ApiResponse<>("Reviews retrieved successfully", reviewResponse, HTTP_OK);
     }
+    /**
+     * Finds a user by email.
+     *
+     * @param email the user's email
+     * @return the user object if found, otherwise throws UserNotFoundException
+     */
     private User findUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("User not found with email: " + email));
     }
-
+    /**
+     * Retrieves a review by its ID.
+     *
+     * @param id the ID of the review
+     * @param email the user's email
+     * @return ApiResponse containing a ReviewResponseDto object and HTTP_OK status code
+     */
     @Override
     public ApiResponse<ReviewResponseDto> getReviewById(Long id, String email) {
         findUserByEmail(email);
@@ -49,7 +69,16 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewResponseDto reviewResponse = DtoMapper.convertToResponseDto(review);
         return new ApiResponse<>("Review retrieved successfully", reviewResponse, HTTP_OK);
     }
-
+    /**
+     * Creates a new review.
+     *
+     * @param requestDto the data for the new review
+     * @param email       the user's email
+     * @param bookId      the ID of the book associated with the review
+     * @throws UserNotFoundException if the user is not found
+     * @throws ResourceNotFoundException if the book is not found
+     * @return ApiResponse containing a ReviewResponseDto object and HTTP_CREATED status code
+     */
     @Override
     public ApiResponse<ReviewResponseDto> createReview(ReviewRequestDto requestDto, String email, Long bookId)
             throws UserNotFoundException, ResourceNotFoundException {
@@ -65,7 +94,14 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewResponseDto reviewResponse = DtoMapper.convertToResponseDto(savedReview);
         return new ApiResponse<>("Review created successfully", reviewResponse, HTTP_CREATED);
     }
-
+    /**
+     * Updates an existing review.
+     *
+     * @param id          the ID of the review to update
+     * @param email       the user's email
+     * @param requestDto the data for the updated review
+     * @return ApiResponse containing a ReviewResponseDto object and HTTP_NO_CONTENT status code
+     */
     @Override
     public ApiResponse<ReviewResponseDto> updateReview(Long id, String email, ReviewRequestDto requestDto) {
         findUserByEmail(email);
@@ -76,7 +112,12 @@ public class ReviewServiceImpl implements ReviewService {
         ReviewResponseDto reviewResponse = DtoMapper.convertToResponseDto(savedReview);
         return new ApiResponse<>("Review retrieved successfully", reviewResponse, HTTP_NO_CONTENT);
     }
-
+    /**
+     * Deletes a review by its ID.
+     *
+     * @param id          the ID of the review to delete
+     * @param email       the user's email
+     */
     @Override
     public void deleteReview(Long id, String email) {
         findUserByEmail(email);

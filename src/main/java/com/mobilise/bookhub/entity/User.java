@@ -15,6 +15,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * User entity representing a registered user in the system.
+ *
+ * @author codecharlan
+ */
 @Setter
 @Getter
 @NoArgsConstructor
@@ -23,57 +28,72 @@ import java.util.List;
 @Table(name = "appuser")
 @Entity
 public class User implements Serializable {
+
+    /**
+     * Unique identifier for the user.
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    /**
+     * Full name of the user.
+     *
+     */
     @Column(length = 100, nullable = false)
     @NotNull(message = "Fullname is required")
     private String fullName;
+
+    /**
+     * Email address of the user.
+     *
+     */
     @Column(length = 100, nullable = false)
     @Email(message = "Must match a proper email")
     @NotNull(message = "Email is required")
     private String email;
-    @Column(length = 100, nullable = false)
-//    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])([a-zA-Z0-9@$!%*?&]{8,})$",
-//            message = "Password must be at least 8 characters long, " +
-//                    "contain at least one uppercase letter, one lowercase letter")
+
+    /**
+     * Password of the user.
+     *
+     */
+    @Column(nullable = false)
     private String password;
+
+    /**
+     * Role of the user in the system.
+     *
+     */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
     private Role role;
+
+    /**
+     * Gender of the user.
+     *
+     */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     @NotNull
     private Gender gender;
+
+    /**
+     * Last login timestamp of the user.
+     */
     @UpdateTimestamp
     @DateTimeFormat(pattern = "MM/dd/yyyy HH:mm:ss")
     private LocalDateTime lastLogin;
+
+    /**
+     * Balance of the user.
+     */
     private BigDecimal balance;
 
+    /**
+     * List of books owned by the user.
+     */
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Book> book = new ArrayList<>();
-
-    public void setRole(Role role) {
-        switch (role) {
-            case USER:
-            case ADMINISTRATOR:
-                this.role = role;
-                break;
-            default:
-                throw new IllegalArgumentException("Role must be either USER or ADMINISTRATOR");
-        }
-    }
-
-    public void setGender(Gender gender) {
-        switch (gender) {
-            case FEMALE:
-            case MALE:
-                this.gender = gender;
-                break;
-            default:
-                throw new IllegalArgumentException("Gender must be male or female");
-        }
-    }
 
 }

@@ -1,7 +1,7 @@
 package com.mobilise.bookhub.security.config;
 
 
-import com.mobilise.bookhub.security.JwtSecurityFilter;
+import com.mobilise.bookhub.security.filter.JwtSecurityFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +25,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Security configuration class for the application.
+ * This class configures the security settings for the application, including authentication, authorization, and CORS.
+ * It also includes a JwtSecurityFilter for handling JWT tokens.
+ *
+ * @author codecharlan
+ * @version 1.0.0
+ */
 @RequiredArgsConstructor
 @Configuration
 @EnableWebSecurity
@@ -34,12 +42,23 @@ import java.util.List;
 public class SecurityConfig {
     private final JwtSecurityFilter jwtSecurityFilter;
 
+    /**
+     * Configures the security filter chain for the application.
+     * This method configures the security settings for the application, including authentication, authorization, and CORS.
+     * It also includes a JwtSecurityFilter for handling JWT tokens.
+     *
+     * @param httpSecurity the HttpSecurity instance to configure
+     * @return the SecurityFilterChain instance
+     * @throws Exception if an error occurs during configuration
+     * @see HttpSecurity
+     * @see SecurityFilterChain
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .cors(Customizer.withDefaults())
                 .csrf(AbstractHttpConfigurer::disable)
-                .authorizeHttpRequests((authorized)-> authorized
+                .authorizeHttpRequests((authorized) -> authorized
                         .requestMatchers(new AntPathRequestMatcher("/h2-console/**")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/users/register")).permitAll()
                         .requestMatchers(new AntPathRequestMatcher("/api/users/login")).permitAll()
@@ -50,17 +69,41 @@ public class SecurityConfig {
         return httpSecurity.build();
     }
 
+    /**
+     * Provides a BCryptPasswordEncoder instance for password encoding.
+     * This method returns a BCryptPasswordEncoder instance, which is used for encoding passwords in the application.
+     *
+     * @return the BCryptPasswordEncoder instance
+     * @see BCryptPasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-
+    /**
+     * Configures the AuthenticationManager instance for the application.
+     * This method configures the AuthenticationManager instance, which is used for managing user authentication in the application.
+     *
+     * @param authenticationConfiguration the AuthenticationConfiguration instance
+     * @return the AuthenticationManager instance
+     * @throws Exception if an error occurs during configuration
+     * @see AuthenticationConfiguration
+     * @see AuthenticationManager
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
+
+    /**
+     * Configures the CorsConfigurationSource instance for the application.
+     * This method configures the CorsConfigurationSource instance, which is used for managing CORS settings in the application.
+     *
+     * @return the CorsConfigurationSource instance
+     * @see CorsConfigurationSource
+     */
 
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {

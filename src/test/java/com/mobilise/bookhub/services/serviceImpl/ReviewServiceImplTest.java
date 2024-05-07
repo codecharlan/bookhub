@@ -49,7 +49,7 @@ class ReviewServiceImplTest {
         review.setRating(4);
         review.setComments("Excellent book!");
         review.setReviewDate(LocalDateTime.now());
-        review.setUser(User.builder().id(1L).fullName("John Doe").email("john.doe@example.com").password("securePassword").role(Role.USER).gender(Gender.MALE).balance(BigDecimal.ZERO).build());
+        review.setUser(User.builder().id(1L).fullName("John Doe").email("ernest@charlancodes.org").password("Wer456gghL@#").role(Role.USER).gender(Gender.MALE).balance(BigDecimal.ZERO).build());
         review.setBook(new Book());
     }
 
@@ -73,7 +73,7 @@ class ReviewServiceImplTest {
         when(reviewRepository.findById(anyLong())).thenReturn(Optional.of(review));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(new Book()));
 
-        ApiResponse<ReviewResponseDto> response = reviewService.getReviewById(1L, "test@example.com");
+        ApiResponse<ReviewResponseDto> response = reviewService.getReviewById(1L, "ernest@charlancodes.org");
 
         // Assertions
         assertNotNull(response);
@@ -89,7 +89,7 @@ class ReviewServiceImplTest {
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(new Book()));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        ApiResponse<ReviewResponseDto> response = reviewService.createReview(requestDto, "test@example.com", 1L);
+        ApiResponse<ReviewResponseDto> response = reviewService.createReview(requestDto, "ernest@charlancodes.org", 1L);
 
         // Assertions
         assertNotNull(response);
@@ -105,7 +105,7 @@ class ReviewServiceImplTest {
         when(reviewRepository.findById(anyLong())).thenReturn(Optional.of(review));
         when(reviewRepository.save(any(Review.class))).thenReturn(review);
 
-        ApiResponse<ReviewResponseDto> response = reviewService.updateReview(1L, "test@example.com", requestDto);
+        ApiResponse<ReviewResponseDto> response = reviewService.updateReview(1L, "ernest@charlancodes.org", requestDto);
 
         // Assertions
         assertNotNull(response);
@@ -119,7 +119,7 @@ class ReviewServiceImplTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(reviewRepository.findById(anyLong())).thenReturn(Optional.of(new Review()));
         //Assertions
-        assertDoesNotThrow(() -> reviewService.deleteReview(1L, "test@example.com"));
+        assertDoesNotThrow(() -> reviewService.deleteReview(1L, "ernest@charlancodes.org"));
         verify(reviewRepository, times(1)).deleteById(1L);
     }
 
@@ -128,7 +128,7 @@ class ReviewServiceImplTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(reviewRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> reviewService.deleteReview(1L, "test@example.com"));
+        assertThrows(ResourceNotFoundException.class, () -> reviewService.deleteReview(1L, "ernest@charlancodes.org"));
         verify(reviewRepository, never()).deleteById(anyLong());
     }
 

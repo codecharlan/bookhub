@@ -1,7 +1,11 @@
 package com.mobilise.bookhub.enums;
 
 import lombok.Getter;
-
+/**
+ * Enum representing the genre of a book.
+ *
+ * @author codecharlan
+ */
 @Getter
 public enum Genre {
     FICTION,

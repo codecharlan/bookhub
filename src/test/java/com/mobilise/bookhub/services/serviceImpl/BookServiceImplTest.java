@@ -55,9 +55,30 @@ class BookServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        bookRequestDto = BookRequestDto.builder().isbn("978-1473622341").title("The Intruder").edition("1st").description("A gripping story of a family and the choices they have to make").genre(Genre.FICTION).status(BookStatus.AVAILABLE).totalCopies(10L).borrowedCopies(0L).publicationYear(2023).unitPriceOfBook(BigDecimal.valueOf(1500)).author(Author.builder().id(1L).name("Femi Fadugba").nationality("America").biography("Creative").build()).publisher(Publisher.builder().id(1L).name("Penguin Random House").contactInformation("penguin@rans.com").build()).build();
-
-        bookResponseDto = BookResponseDto.builder().isbn("978-1473622341").title("The Intruder").edition("1st").description("A gripping story of a family and the choices they have to make").genre(Genre.FICTION).status(BookStatus.AVAILABLE).totalCopies(10L).borrowedCopies(0L).publicationYear(2023).unitPriceOfBook(BigDecimal.valueOf(1500)).author(Author.builder().id(1L).name("Femi Fadugba").nationality("America").biography("Creative").build()).publisher(Publisher.builder().id(1L).name("Penguin Random House").contactInformation("penguin@rans.com").build()).build();
+        bookRequestDto = BookRequestDto.builder()
+                .isbn("978-1473622341").
+                title("The Intruder")
+                .edition("1st")
+                .description("A gripping story of a family and the choices they have to make")
+                .genre(Genre.FICTION).status(BookStatus.AVAILABLE)
+                .totalCopies(10L).borrowedCopies(0L).publicationYear(2023)
+                .unitPriceOfBook(BigDecimal.valueOf(1500))
+                .author(Author.builder().id(1L).name("Femi Fadugba")
+                        .nationality("America").biography("Creative").build())
+                .publisher(Publisher.builder().id(1L).name("Penguin Random House")
+                        .contactInformation("penguin@rans.com").build()).build();
+        bookResponseDto = BookResponseDto.builder().isbn("978-1473622341")
+                .title("The Intruder").edition("1st")
+                .description("A gripping story of a family and the choices they have to make")
+                .genre(Genre.FICTION).status(BookStatus.AVAILABLE).totalCopies(10L)
+                .borrowedCopies(0L).publicationYear(2023).unitPriceOfBook(BigDecimal.valueOf(1500))
+                .author(Author.builder().id(1L).name("Femi Fadugba").nationality("America")
+                        .biography("Creative").build())
+                .publisher(Publisher.builder().id(1L)
+                        .name("Penguin Random House")
+                        .contactInformation("penguin@rans.com")
+                        .build())
+                .build();
     }
 
     @Test
@@ -72,7 +93,7 @@ class BookServiceImplTest {
         when(bookRepository.save(any(Book.class))).thenReturn(book);
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
 
-        ApiResponse<BookResponseDto> actualResponse = bookService.createBook("test@example.com", bookRequestDto);
+        ApiResponse<BookResponseDto> actualResponse = bookService.createBook("ernest@charlancodes.org", bookRequestDto);
 
         // Assertions
         assertEquals(expectedResponse, actualResponse);
@@ -84,17 +105,17 @@ class BookServiceImplTest {
         existingBook.setId(1L);
         existingBook.setTitle("Original Title");
         existingBook.setIsbn("Original ISBN");
-        existingBook.setAuthor(Author.builder().name("Simo").nationality("Nigeria").emailAddress("dea@gamil.com").build());
+        existingBook.setAuthor(Author.builder().name("Chinua Achebe").nationality("Nigeria").emailAddress("c.achebe@gmail.com").build());
         existingBook.setPublisher(Publisher.builder().id(2L).name("Manning Corp").location("New York").build());
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(new User()));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(existingBook));
-        when(authorRepository.findByEmailAddress(anyString())).thenReturn(Optional.of(Author.builder().name("Simo").nationality("Nigeria").emailAddress("dea@gamil.com").build()));
+        when(authorRepository.findByEmailAddress(anyString())).thenReturn(Optional.of(Author.builder().name("Chinua Achebe").nationality("Nigeria").emailAddress("c.achebe@gmail.com").build()));
         when(publisherRepository.findByName(anyString())).thenReturn(Optional.of(new Publisher()));
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
         when(bookRepository.save(any(Book.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
-        ApiResponse<BookResponseDto> response = bookService.editBook("test@example.com", 1L, bookRequestDto);
+        ApiResponse<BookResponseDto> response = bookService.editBook("ernest@charlancodes.org", 1L, bookRequestDto);
 
         // Assertions
         assertEquals(HttpStatus.NO_CONTENT.value(), response.status());
@@ -104,7 +125,7 @@ class BookServiceImplTest {
     @Test
     void testGetAllBooks_Success() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
         PageRequest pageable = PageRequest.of(0, 10);
         List<Book> books = Collections.singletonList(new Book());
         Page<Book> bookPage = new PageImpl<>(books);
@@ -113,7 +134,7 @@ class BookServiceImplTest {
         when(bookRepository.findAll(any(PageRequest.class))).thenReturn(bookPage);
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
 
-        ApiResponse<ApiResponse.Wrapper<List<BookResponseDto>>> response = bookService.getAllBooks("test@example.com", 0, 10, "title", "asc", null);
+        ApiResponse<ApiResponse.Wrapper<List<BookResponseDto>>> response = bookService.getAllBooks("ernest@charlancodes.org", 0, 10, "title", "asc", null);
 
         // Assertions
         assertEquals(HttpStatus.OK.value(), response.status());
@@ -123,7 +144,7 @@ class BookServiceImplTest {
     @Test
     void testGetBookById_Success() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
 
@@ -131,7 +152,7 @@ class BookServiceImplTest {
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
 
-        ApiResponse<BookResponseDto> response = bookService.getBookById("test@example.com", 1L);
+        ApiResponse<BookResponseDto> response = bookService.getBookById("ernest@charlancodes.org", 1L);
 
         // Assertions
         assertEquals(HttpStatus.OK.value(), response.status());
@@ -141,12 +162,12 @@ class BookServiceImplTest {
     @Test
     void testGetBookById_BookNotFound() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> {
-            bookService.getBookById("test@example.com", 1L);
+            bookService.getBookById("ernest@charlancodes.org", 1L);
         });
 
         verify(bookRepository, times(1)).findById(anyLong());
@@ -155,7 +176,7 @@ class BookServiceImplTest {
     @Test
     void testDeleteBook_Success() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
         book.setBorrowedCopies(0L);
@@ -163,7 +184,7 @@ class BookServiceImplTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
 
-        ApiResponse<String> response = bookService.deleteBook("test@example.com", 1L);
+        ApiResponse<String> response = bookService.deleteBook("ernest@charlancodes.org", 1L);
 
         // Assertions
         assertEquals(HttpStatus.NO_CONTENT.value(), response.status());
@@ -173,7 +194,7 @@ class BookServiceImplTest {
     @Test
     void testDeleteBook_BookCannotBeDeleted() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
         book.setBorrowedCopies(1L);
@@ -182,7 +203,7 @@ class BookServiceImplTest {
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
 
         assertThrows(BookOperationException.class, () -> {
-            bookService.deleteBook("test@example.com", 1L);
+            bookService.deleteBook("ernest@charlancodes.org", 1L);
         });
         verify(bookRepository, times(0)).delete(any(Book.class));
     }
@@ -190,13 +211,13 @@ class BookServiceImplTest {
     @Test
     void testDeleteBook_BookNotFound() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(BookOperationException.class, () -> {
-            bookService.deleteBook("test@example.com", 1L);
+            bookService.deleteBook("ernest@charlancodes.org", 1L);
         });
         verify(bookRepository, times(0)).delete(any(Book.class));
     }
@@ -204,7 +225,7 @@ class BookServiceImplTest {
     @Test
     void testSearchBooksByTitleOrAuthor_Success() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
         PageRequest pageable = PageRequest.of(0, 10);
         List<Book> books = Collections.singletonList(new Book());
         Page<Book> bookPage = new PageImpl<>(books);
@@ -213,7 +234,7 @@ class BookServiceImplTest {
         when(bookRepository.findByTitleContainingIgnoreCaseOrAuthor_NameContainingIgnoreCase(anyString(), anyString(), any(PageRequest.class))).thenReturn(bookPage);
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
 
-        ApiResponse<ApiResponse.Wrapper<List<BookResponseDto>>> response = bookService.searchBooksByTitleOrAuthor("test@example.com", 0, 10, "searchTerm");
+        ApiResponse<ApiResponse.Wrapper<List<BookResponseDto>>> response = bookService.searchBooksByTitleOrAuthor("ernest@charlancodes.org", 0, 10, "searchTerm");
 
         // Assertions
         assertEquals(HttpStatus.OK.value(), response.status());
@@ -223,12 +244,12 @@ class BookServiceImplTest {
     @Test
     void testSearchBooksByTitleOrAuthor_EmptySearchTerm() {
         User user = new User();
-        user.setEmail("test@example.com");
+        user.setEmail("ernest@charlancodes.org");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
         assertThrows(BookOperationException.class, () -> {
-            bookService.searchBooksByTitleOrAuthor("test@example.com", 0, 10, "");
+            bookService.searchBooksByTitleOrAuthor("ernest@charlancodes.org", 0, 10, "");
         });
         verify(bookRepository, times(0)).findByTitleContainingIgnoreCaseOrAuthor_NameContainingIgnoreCase(anyString(), anyString(), any(PageRequest.class));
     }
@@ -236,7 +257,7 @@ class BookServiceImplTest {
     @Test
     void testBorrowBook_Success() {
         User borrower = new User();
-        borrower.setEmail("test@example.com");
+        borrower.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
         book.setTotalCopies(5L);
@@ -246,7 +267,7 @@ class BookServiceImplTest {
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
         when(transactionRepository.save(any(Transaction.class))).thenReturn(new Transaction());
 
-        ApiResponse<BookResponseDto> response = bookService.borrowBook(1L, "test@example.com", 3);
+        ApiResponse<BookResponseDto> response = bookService.borrowBook(1L, "ernest@charlancodes.org", 3);
 
         // Assertions
         assertEquals(HttpStatus.OK.value(), response.status());
@@ -256,14 +277,14 @@ class BookServiceImplTest {
     @Test
     void testBorrowBook_InvalidArgument() {
         User borrower = new User();
-        borrower.setEmail("test@example.com");
+        borrower.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(borrower));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.of(book));
 
         assertThrows(InvalidArgumentException.class, () -> {
-            bookService.borrowBook(1L, "test@example.com", -3);
+            bookService.borrowBook(1L, "ernest@charlancodes.org", -3);
         });
 
         verify(transactionRepository, times(0)).save(any(Transaction.class));
@@ -272,13 +293,13 @@ class BookServiceImplTest {
     @Test
     void testBorrowBook_BookNotFound() {
         User borrower = new User();
-        borrower.setEmail("test@example.com");
+        borrower.setEmail("ernest@charlancodes.org");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(borrower));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
-            bookService.borrowBook(1L, "test@example.com", 3);
+            bookService.borrowBook(1L, "ernest@charlancodes.org", 3);
         });
 
         verify(transactionRepository, times(0)).save(any(Transaction.class));
@@ -288,7 +309,7 @@ class BookServiceImplTest {
     @Test
     void testReturnBook_Success() {
         User borrower = new User();
-        borrower.setEmail("test@example.com");
+        borrower.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
         book.setBorrowedCopies(3L);
@@ -298,7 +319,7 @@ class BookServiceImplTest {
         when(transactionRepository.findTransactionByUserIdAndBookIdAndType(anyLong(), anyLong(), any(TransactionType.class))).thenReturn(Optional.of(new Transaction()));
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
 
-        ApiResponse<BookResponseDto> response = bookService.returnBook("test@example.com", 1L, 2);
+        ApiResponse<BookResponseDto> response = bookService.returnBook("ernest@charlancodes.org", 1L, 2);
 
         // Assertions
         assertEquals(HttpStatus.OK.value(), response.status());
@@ -307,13 +328,13 @@ class BookServiceImplTest {
     @Test
     void testReturnBook_InvalidArgument() {
         User borrower = new User();
-        borrower.setEmail("test@example.com");
+        borrower.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(borrower));
+        when(userRepository.findByEmail("ernest@charlancodes.org")).thenReturn(Optional.of(borrower));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         assertThrows(InvalidArgumentException.class, () -> {
-            bookService.returnBook("test@example.com", 1L, -2);
+            bookService.returnBook("ernest@charlancodes.org", 1L, -2);
         });
         verify(transactionRepository, times(0)).save(any(Transaction.class));
     }
@@ -321,13 +342,13 @@ class BookServiceImplTest {
     @Test
     void testReturnBook_BookNotFound() {
         User borrower = new User();
-        borrower.setEmail("test@example.com");
+        borrower.setEmail("ernest@charlancodes.org");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(borrower));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
-            bookService.returnBook("test@example.com", 1L, 2);
+            bookService.returnBook("ernest@charlancodes.org", 1L, 2);
         });
         verify(transactionRepository, times(0)).save(any(Transaction.class));
     }
@@ -335,7 +356,7 @@ class BookServiceImplTest {
     @Test
     void testPurchaseBook_Success() {
         User purchaser = new User();
-        purchaser.setEmail("test@example.com");
+        purchaser.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
         book.setTotalCopies(5L);
@@ -346,7 +367,7 @@ class BookServiceImplTest {
         when(dtoMapper.createBookResponse(any(Book.class))).thenReturn(bookResponseDto);
         when(transactionRepository.save(any(Transaction.class))).thenReturn(new Transaction());
 
-        ApiResponse<BookResponseDto> response = bookService.purchaseBook(1L, "test@example.com", 3);
+        ApiResponse<BookResponseDto> response = bookService.purchaseBook(1L, "ernest@charlancodes.org", 3);
 
         // Assertions
         assertEquals(HttpStatus.OK.value(), response.status());
@@ -356,15 +377,15 @@ class BookServiceImplTest {
     @Test
     void testPurchaseBook_InvalidArgument() {
         User purchaser = new User();
-        purchaser.setEmail("test@example.com");
+        purchaser.setEmail("ernest@charlancodes.org");
         User borrower = new User();
-        borrower.setEmail("test@example.com");
+        borrower.setEmail("ernest@charlancodes.org");
         Book book = new Book();
         book.setId(1L);
-        when(userRepository.findByEmail("test@example.com")).thenReturn(Optional.of(borrower));
+        when(userRepository.findByEmail("ernest@charlancodes.org")).thenReturn(Optional.of(borrower));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         assertThrows(InvalidArgumentException.class, () -> {
-            bookService.purchaseBook(1L, "test@example.com", -3);
+            bookService.purchaseBook(1L, "ernest@charlancodes.org", -3);
         });
         verify(transactionRepository, times(0)).save(any(Transaction.class));
     }
@@ -372,13 +393,13 @@ class BookServiceImplTest {
     @Test
     void testPurchaseBook_BookNotFound() {
         User purchaser = new User();
-        purchaser.setEmail("test@example.com");
+        purchaser.setEmail("ernest@charlancodes.org");
 
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(purchaser));
         when(bookRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class, () -> {
-            bookService.purchaseBook(1L, "test@example.com", 3);
+            bookService.purchaseBook(1L, "ernest@charlancodes.org", 3);
         });
         verify(transactionRepository, times(0)).save(any(Transaction.class));
     }
@@ -414,7 +435,7 @@ class BookServiceImplTest {
 
         when(transactionRepository.findTransactionByUserIdAndBookIdAndType(anyLong(), anyLong(), any(TransactionType.class))).thenReturn(Optional.of(new Transaction()));
 
-        Optional<Transaction> transaction = bookService.findTransaction(user, book, TransactionType.BORROW);
+        Optional<Transaction> transaction = bookService.findTransaction(user, book);
 
         // Assertions
         Assertions.assertTrue(transaction.isPresent());
@@ -428,7 +449,7 @@ class BookServiceImplTest {
         book.setId(1L);
         when(transactionRepository.findTransactionByUserIdAndBookIdAndType(anyLong(), anyLong(), any(TransactionType.class))).thenReturn(Optional.empty());
 
-        Optional<Transaction> transaction = bookService.findTransaction(user, book, TransactionType.BORROW);
+        Optional<Transaction> transaction = bookService.findTransaction(user, book);
 
         // Assertions
         Assertions.assertFalse(transaction.isPresent());
@@ -438,12 +459,16 @@ class BookServiceImplTest {
     void testCheckForDuplicateBook_DuplicateFound() {
         Book existingBook = new Book();
         existingBook.setId(1L);
-        existingBook.setTitle("Title");
-        existingBook.setAuthor(Author.builder().name("Simo").nationality("Nigeria").emailAddress("dea@gamil.com").build());
+        existingBook.setTitle("Things fall apar");
+        existingBook.setAuthor(Author.builder()
+                .name("Chinua Achebe")
+                .nationality("Nigeria")
+                .emailAddress("c.achebe@gmail.com")
+                .build());
         when(bookRepository.findByTitleAndAuthor_Name(anyString(), anyString())).thenReturn(Optional.of(existingBook));
 
         assertThrows(BookAlreadyCreatedException.class, () -> {
-            bookService.checkForDuplicateBook("Title", "Simo");
+            bookService.checkForDuplicateBook("Things fall apart", "Chinua Achebe");
         });
 
         verify(bookRepository, times(1)).findByTitleAndAuthor_Name(anyString(), anyString());
@@ -453,7 +478,7 @@ class BookServiceImplTest {
     void testCheckForDuplicateBook_NoDuplicate() {
         when(bookRepository.findByTitleAndAuthor_Name(anyString(), anyString())).thenReturn(Optional.empty());
         assertDoesNotThrow(() -> {
-            bookService.checkForDuplicateBook("Title", "Author");
+            bookService.checkForDuplicateBook("Things fall apart", "Author");
         });
 
         verify(bookRepository, times(1)).findByTitleAndAuthor_Name(anyString(), anyString());
@@ -465,7 +490,7 @@ class BookServiceImplTest {
         user.setId(1L);
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
 
-        User foundUser = bookService.findUserByEmail("test@example.com");
+        User foundUser = bookService.findUserByEmail("ernest@charlancodes.org");
 
         // Assertions
         assertNotNull(foundUser);
@@ -477,7 +502,7 @@ class BookServiceImplTest {
         when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         assertThrows(UserNotFoundException.class, () -> {
-            bookService.findUserByEmail("test@example.com");
+            bookService.findUserByEmail("ernest@charlancodes.org");
         });
         verify(userRepository, times(1)).findByEmail(anyString());
     }

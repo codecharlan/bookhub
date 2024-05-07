@@ -1,15 +1,18 @@
+# Applications Config: imported from .env
 spring:
+  config:
+    import: "optional:file:.env[.properties]"
   application:
-    name: bookhub
+    name: ${SPRING_APPLICATION_NAME}
   datasource:
-    url: jdbc:h2:mem:testdb
-    driverClassName: org.h2.Driver
-    username: sa
-    password: password
+    url: ${SPRING_DATASOURCE_URL}
+    driverClassName: ${SPRING_DATASOURCE_DRIVERCLASSNAME}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
   h2:
     console:
-      enabled: true
-      path: /h2-console
+      enabled: ${SPRING_H2_CONSOLE_ENABLED}
+      path: ${SPRING_H2_CONSOLE_PATH}
 
 jwt:
-  secretToken: sdfgherojhgfdfghjklkjherogfdfghjklffgherojkljgfghjkgfgherojkjhfdfghjkjherogfghjhgfgherojhgfgh
+  secret: ${JWT_SECRET}

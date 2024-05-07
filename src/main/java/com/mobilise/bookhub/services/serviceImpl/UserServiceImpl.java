@@ -32,6 +32,13 @@ import java.util.Optional;
 import static com.mobilise.bookhub.constants.Constants.NETWORK_AUTHENTICATION_REQUIRED;
 import static java.net.HttpURLConnection.*;
 
+/**
+ * UserServiceImpl class implements the UserService interface.
+ * It provides methods for user registration, login, and logout.
+ *
+ * @author codecharlan
+ * @version 1. 0. 0
+ */
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
@@ -40,6 +47,13 @@ public class UserServiceImpl implements UserService {
     private final JwtService jwtService;
     private final DtoMapper dtoMapper;
 
+    /**
+     * Registers a new user.
+     *
+     * @param registrationRequest the request containing the user's registration details
+     * @return an ApiResponse object containing the registration response and HTTP status code
+     * @throws UserAlreadyExistException if the user already exists
+     */
     @Override
     public ApiResponse<RegistrationResponseDto> registerUser(RegistrationRequestDto registrationRequest) {
         Optional<User> optionalUser = userRepository.findByEmail(registrationRequest.email());
@@ -52,6 +66,14 @@ public class UserServiceImpl implements UserService {
         return new ApiResponse<>("User created successfully", registrationResponse, HTTP_CREATED);
     }
 
+    /**
+     * Logs in a user.
+     *
+     * @param loginRequest the request containing the user's login credentials
+     * @return an ApiResponse object containing the login response and HTTP status code
+     * @throws InvalidCredentialException if the provided credentials are invalid
+     * @throws DisabledException          if the user is disabled
+     */
     @Override
     public ApiResponse<LoginResponseDto> login(LoginRequestDto loginRequest) {
         try {
@@ -81,6 +103,12 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    /**
+     * Extracts the user's role from the provided UserDetails object.
+     *
+     * @param userDetails the UserDetails object containing the user's details
+     * @return the user's role as a Role enum
+     */
     private Role extractUserRole(UserDetails userDetails) {
         if (userDetails == null) {
             throw new IllegalArgumentException("Invalid entry: retry again");
@@ -105,7 +133,12 @@ public class UserServiceImpl implements UserService {
             }
         }
     }
-
+    /**
+     * Logs out the user.
+     *
+     * @param authorizationHeader the authorization header containing the user's token
+     * @return an ApiResponse object containing the logout response and HTTP status code
+     */
     @Override
     public ApiResponse<String> logout(String authorizationHeader) {
         try {

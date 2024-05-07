@@ -93,7 +93,13 @@ public class BookController {
             return new ResponseEntity<>(null, BAD_REQUEST);
         }
     }
-
+    /**
+     * Method for retrieving a specific book by its id.
+     *
+     * @param authorizationHeader The authorization header containing the JWT token.
+     * @param id                  The id of the book to be retrieved.
+     * @return A response containing the requested book.
+     */
     @GetMapping(ID_URL)
     public ResponseEntity<ApiResponse<BookResponseDto>> getBookById(@RequestHeader(AUTHORIZATION_HEADER) String authorizationHeader, @PathVariable Long id) {
         String token = authorizationHeader.substring(7);
@@ -102,6 +108,15 @@ public class BookController {
         HttpStatus httpStatus = HttpStatus.valueOf(response.status());
         return new ResponseEntity<>(response, httpStatus);
     }
+    /**
+     * Method for searching books by title or author.
+     *
+     * @param authorizationHeader The authorization header containing the JWT token.
+     * @param pageNumber          The page number of the results.
+     * @param pageSize            The number of results per page.
+     * @param searchTerm          The search term for filtering the results.
+     * @return A response containing the list of books and pagination information.
+     */
     @GetMapping(SEARCH_URL)
     public ResponseEntity<ApiResponse<ApiResponse.Wrapper<List<BookResponseDto>>>> searchBooksByTitleOrAuthor(
             @RequestHeader(AUTHORIZATION_HEADER) String authorizationHeader,

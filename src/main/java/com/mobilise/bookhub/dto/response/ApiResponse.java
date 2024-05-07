@@ -7,6 +7,7 @@ import lombok.Setter;
  * Represents a response from all endpoint.
  *
  * @param <T> The type of the data contained in the response.
+ * @author codecharlan
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public record ApiResponse<T>(String message, T data, int status) {

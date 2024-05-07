@@ -18,12 +18,23 @@ import java.math.BigDecimal;
 import java.util.Optional;
 
 import static com.mobilise.bookhub.enums.BookStatus.AVAILABLE;
+/**
+ * A utility class for mapping DTOs to entities and vice versa.
+ *
+ * @author codecharlan
+ */
 @RequiredArgsConstructor
 @Service
 public class DtoMapper {
     private final PasswordEncoder passwordEncoder;
     private final AuthorRepository authorRepository;
     private final PublisherRepository publisherRepository;
+    /**
+     * Creates a new User entity from the provided RegistrationRequestDto.
+     *
+     * @param newUser the RegistrationRequestDto containing the user's details
+     * @return a new User entity with the provided details
+     */
     public User createNewUser(RegistrationRequestDto newUser) {
 
         return User.builder()
@@ -35,7 +46,12 @@ public class DtoMapper {
                 .password(passwordEncoder.encode(newUser.password()))
                 .build();
     }
-
+    /**
+     * Creates a RegistrationResponseDto from the provided User entity.
+     *
+     * @param savedUser the User entity to be converted to a RegistrationResponseDto
+     * @return a RegistrationResponseDto containing the user's details
+     */
     public RegistrationResponseDto createUserResponse(User savedUser) {
         return RegistrationResponseDto.builder()
                 .fullName(savedUser.getFullName())
@@ -45,7 +61,13 @@ public class DtoMapper {
                 .balance(savedUser.getBalance())
                 .build();
     }
-
+    /**
+     * Creates a LoginResponseDto from the provided UserDetailsImpl and token.
+     *
+     * @param saveUser the UserDetailsImpl to be converted to a LoginResponseDto
+     * @param token     the JWT token to be included in the LoginResponseDto
+     * @return a LoginResponseDto containing the user's details and token
+     */
     public LoginResponseDto createLoginResponse(UserDetailsImpl saveUser, String token) {
         return LoginResponseDto.builder()
                 .id(saveUser.getId())
@@ -54,6 +76,12 @@ public class DtoMapper {
                 .jwtToken(token)
                 .build();
     }
+    /**
+     * Creates a BookResponseDto from the provided Book entity.
+     *
+     * @param book the Book entity to be converted to a BookResponseDto
+     * @return a BookResponseDto containing the book's details
+     */
     public BookResponseDto createBookResponse(Book book) {
         return BookResponseDto.builder()
                 .id(book.getId())
@@ -71,7 +99,12 @@ public class DtoMapper {
                 .publisher(book.getPublisher())
                 .build();
     }
-
+    /**
+     * Creates a new Book entity from the provided BookRequestDto.
+     *
+     * @param newBook the BookRequestDto containing the book's details
+     * @return a new Book entity with the provided details
+     */
     public Book createNewBook(BookRequestDto newBook) {
         Optional<Author> existingAuthor = authorRepository.findByEmailAddress(newBook.author().getEmailAddress());
         Author author = existingAuthor.orElseGet(() -> createAuthor(newBook));
@@ -96,6 +129,12 @@ public class DtoMapper {
                 .unitPriceOfBook(newBook.unitPriceOfBook())
                 .build();
     }
+    /**
+     * Creates a new Author entity from the provided BookRequestDto.
+     *
+     * @param newBook the BookRequestDto containing the author's details
+     * @return a new Author entity with the provided details
+     */
     private static Author createAuthor(BookRequestDto newBook) {
         return Author.builder()
                 .name(newBook.author().getName())
@@ -104,7 +143,12 @@ public class DtoMapper {
                 .nationality(newBook.author().getNationality())
                 .build();
     }
-
+    /**
+     * Creates a new Publisher entity from the provided BookRequestDto.
+     *
+     * @param newBook the BookRequestDto containing the publisher's details
+     * @return a new Publisher entity with the provided details
+     */
     private static Publisher createPublisher(BookRequestDto newBook) {
         return Publisher.builder()
                 .name(newBook.publisher().getName())
@@ -112,7 +156,12 @@ public class DtoMapper {
                 .contactInformation(newBook.publisher().getContactInformation())
                 .build();
     }
-
+    /**
+     * Converts a Review entity to a ReviewResponseDto.
+     *
+     * @param review the Review entity to be converted to a ReviewResponseDto
+     * @return a ReviewResponseDto containing the review's details
+     */
     public static ReviewResponseDto convertToResponseDto(Review review) {
         return ReviewResponseDto.builder()
                 .id(review.getId())

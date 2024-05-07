@@ -54,11 +54,11 @@ class UserServiceImplTest {
     @BeforeEach
     void setUp() {
         MockitoAnnotations.openMocks(this);
-        user = User.builder().id(1L).fullName("John Doe").email("john.doe@example.com").password("securePassword").role(Role.USER).gender(Gender.MALE).balance(BigDecimal.ZERO).build();
-        registrationRequestDto = RegistrationRequestDto.builder().fullName("John Doe").email("john.doe@example.com").password("securePassword").gender(Gender.MALE).role(Role.USER).build();
-        registrationResponseDto = RegistrationResponseDto.builder().fullName("John Doe").email("john.doe@example.com").gender(Gender.MALE).role(Role.USER).build();
-        loginRequestDto = LoginRequestDto.builder().email("john.doe@example.com").password("password").build();
-        loginResponseDto = LoginResponseDto.builder().id(1L).fullName("John Doe").email("john.doe@example.com").jwtToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9").build();
+        user = User.builder().id(1L).fullName("Charlan Codes").email("ernest@charlancodes.org").password("securePassword").role(Role.USER).gender(Gender.MALE).balance(BigDecimal.ZERO).build();
+        registrationRequestDto = RegistrationRequestDto.builder().fullName("Charlan Codes").email("ernest@charlancodes.org").password("securePassword").gender(Gender.MALE).role(Role.USER).build();
+        registrationResponseDto = RegistrationResponseDto.builder().fullName("Charlan Codes").email("ernest@charlancodes.org").gender(Gender.MALE).role(Role.USER).build();
+        loginRequestDto = LoginRequestDto.builder().email("ernest@charlancodes.org").password("password").build();
+        loginResponseDto = LoginResponseDto.builder().id(1L).fullName("Charlan Codes").email("ernest@charlancodes.org").jwtToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9").build();
 
     }
 
@@ -83,7 +83,7 @@ class UserServiceImplTest {
         Authentication authentication = new UsernamePasswordAuthenticationToken(userDetails, null);
 
         when(authenticationManager.authenticate(any(UsernamePasswordAuthenticationToken.class))).thenReturn(authentication);
-        when(jwtService.generateToken(any(Authentication.class), any(Role.class))).thenReturn("token");
+        when(jwtService.generateToken(any(Authentication.class), any(Role.class))).thenReturn("Bearer eydfghjhgfdfghjhgfdfghjhgf.dsfghgfdfgherttrtyuigfcvbh567865ev");
         when(dtoMapper.createLoginResponse(any(UserDetailsImpl.class), anyString())).thenReturn(loginResponseDto);
 
         ApiResponse<LoginResponseDto> response = userService.login(loginRequestDto);
@@ -114,8 +114,8 @@ class UserServiceImplTest {
 
     @Test
     void testLogout_Success() {
-        String authorizationHeader = "Bearer token";
-        when(jwtService.parseTokenClaims(anyString())).thenReturn(Map.of("key", "value"));
+        String authorizationHeader = "Bearer eydfghjhgfdfghjhgfdfghjhgf.dsfghgfdfgherttrtyuigfcvbh567865ev";
+        when(jwtService.parseTokenClaims(anyString())).thenReturn(Map.of("email", "ernest@charlancodes.org"));
 
         ApiResponse<String> response = userService.logout(authorizationHeader);
 
@@ -127,7 +127,7 @@ class UserServiceImplTest {
 
     @Test
     void testLogout_AlreadyLoggedOut() {
-        String authorizationHeader = "Bearer token";
+        String authorizationHeader = "Bearer eydfghjhgfdfghjhgfdfghjhgf.dsfghgfdfgherttrtyuigfcvbh567865ev";
         when(jwtService.parseTokenClaims(anyString())).thenReturn(null);
 
         ApiResponse<String> response = userService.logout(authorizationHeader);

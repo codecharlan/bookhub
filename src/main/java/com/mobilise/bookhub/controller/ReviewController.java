@@ -85,7 +85,7 @@ public class ReviewController {
     }
 
     /**
-     * Deletes a review by its ID.
+     * Edits a review by its ID.
      *
      * @param id                  The ID of the review to delete.
      * @param authorizationHeader The bearer token of the user creating the review.
