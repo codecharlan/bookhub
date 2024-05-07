@@ -1,6 +1,6 @@
 # Mobilise: BookHubApplication
 
-![CI/CD Workflow](https://github.com/codecharlan/bookhub/actions/workflows/maven.yml/badge.svg)
+![CI/CD Workflow](https://github.com/codecharlan/bookhub/actions/workflows/Maven.yml/badge.svg)
 
 ## Overview
 
