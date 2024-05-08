@@ -46,19 +46,16 @@ public class Review {
     private Book book;
 
     /**
-     * The rating of the book, between 1 and 5.
+     * The rating of the book
      *
      */
-    @NotNull(message = "Book rating is required")
-    @Min(1)
-    @Max(5)
+
     private int rating;
 
     /**
      * The comments left by the user about the book.
      *
      */
-    @Size(max = 455)
     private String comments;
 
     /**

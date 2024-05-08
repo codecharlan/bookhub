@@ -45,15 +45,12 @@ public class Book {
      * Required field.
      *
      */
-    @NotBlank(message = "ISBN is mandatory")
     private String isbn;
 
     /**
      * The title of the book.
-     * Required field.
      *
      */
-    @NotBlank(message = "Book title is mandatory")
     private String title;
 
     /**
@@ -64,15 +61,12 @@ public class Book {
 
     /**
      * The description of the book.
-     * Required field.
      *
      */
-    @NotBlank(message = "Book description is mandatory")
     private String description;
 
     /**
      * The genre of the book.
-     * Required field.
      *
      */
     @Column(nullable = false)
@@ -81,7 +75,6 @@ public class Book {
 
     /**
      * The status of the book.
-     * Required field.
      *
      */
     @Column(nullable = false)
@@ -90,10 +83,8 @@ public class Book {
 
     /**
      * The total number of copies of the book.
-     * Required field.
      *
      */
-    @Min(value = 0, message = "Total copies must be at least 0")
     private Long totalCopies;
 
     /**
@@ -104,22 +95,17 @@ public class Book {
 
     /**
      * The unit price of the book.
-     * Required field.
      *
      */
     @Column(nullable = false)
-    @Min(value = 0, message = "Unit price cannot be negative")
-    @NotNull(message = "Unit price is mandatory")
     private BigDecimal unitPriceOfBook;
 
     /**
      * The author of the book.
-     * Required field.
      *
      */
     @ManyToOne
     @JoinColumn(name = "author_id")
-    @NotNull(message = "Book author is mandatory")
     private Author author;
 
     /**
@@ -137,7 +123,6 @@ public class Book {
 
     /**
      * The publisher of the book.
-     * Required field.
      *
      */
     @ManyToOne
@@ -146,11 +131,9 @@ public class Book {
 
     /**
      * The publication year of the book.
-     * Required field.
      *
      */
-    @Min(value = 1000, message = "Publication year must be after 999")
-    @PastYear(message = "Enter a correct publication year as your entry is in the future")  //Publication year cannot be in the future
+
     private Integer publicationYear;
 
     /**

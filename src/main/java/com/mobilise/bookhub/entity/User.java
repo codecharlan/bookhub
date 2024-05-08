@@ -41,7 +41,6 @@ public class User implements Serializable {
      *
      */
     @Column(length = 100, nullable = false)
-    @NotNull(message = "Fullname is required")
     private String fullName;
 
     /**
@@ -49,8 +48,6 @@ public class User implements Serializable {
      *
      */
     @Column(length = 100, nullable = false)
-    @Email(message = "Must match a proper email")
-    @NotNull(message = "Email is required")
     private String email;
 
     /**
@@ -66,7 +63,6 @@ public class User implements Serializable {
      */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Role role;
 
     /**
@@ -75,7 +71,6 @@ public class User implements Serializable {
      */
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    @NotNull
     private Gender gender;
 
     /**
